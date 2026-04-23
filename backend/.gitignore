@@ -1,0 +1,25 @@
+# Ambiente
+.env
+.env.local
+.env.*.local
+
+# Dependências
+node_modules/
+vendor/
+
+# Banco de dados
+*.sqlite
+*.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
