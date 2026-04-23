@@ -1,90 +1,60 @@
-const livroModel = require('../models/livroModel')
- 
+const livroService = require('../services/livroService')
+
 const livroController = {
-    listarLivros: async (req, res) => {
+    listarTodos: async (req, res) => {
         try {
-            const livros = await livroModel.listarTodos()
+            const livros = await livroService.listarTodos()
             res.json(livros)
         } catch (error) {
             console.error('Erro ao listar livros:', error)
-            res.status(500).json({ erro: 'Erro interno ao listar livros' })
+            res.status(error.status || 500).json({ erro: error.message })
         }
     },
- 
+
     buscarPorId: async (req, res) => {
         try {
             const { id } = req.params
-            const livro = await livroModel.buscarPorId(id)
- 
-            if (!livro) {
-                return res.status(404).json({ erro: 'Livro não encontrado' })
-            }
- 
+            const livro = await livroService.buscarPorId(id)
             res.json(livro)
         } catch (error) {
             console.error('Erro ao buscar livro:', error)
-            res.status(500).json({ erro: 'Erro interno ao buscar livro' })
+            res.status(error.status || 500).json({ erro: error.message })
         }
     },
- 
-    criarLivro: async (req, res) => {
+
+    criar: async (req, res) => {
         try {
             const { titulo, autor, isbn, quantidade } = req.body
- 
-            if (!titulo || !autor || !isbn || !quantidade) {
-                return res.status(400).json({ erro: 'Todos os campos são obrigatórios: titulo, autor, isbn, quantidade' })
-            }
- 
-            if (quantidade < 1) {
-                return res.status(400).json({ erro: 'A quantidade deve ser maior que zero' })
-            }
- 
-            const novoLivro = await livroModel.criar(titulo, autor, isbn, quantidade)
+            const novoLivro = await livroService.criar(titulo, autor, isbn, quantidade)
             res.status(201).json(novoLivro)
         } catch (error) {
             console.error('Erro ao criar livro:', error)
-            res.status(500).json({ erro: 'Erro interno ao criar livro' })
+            res.status(error.status || 500).json({ erro: error.message })
         }
     },
- 
-    atualizarLivro: async (req, res) => {
+
+    atualizar: async (req, res) => {
         try {
             const { id } = req.params
             const { titulo, autor, isbn } = req.body
- 
-            if (!titulo || !autor || !isbn) {
-                return res.status(400).json({ erro: 'Todos os campos são obrigatórios: titulo, autor, isbn' })
-            }
- 
-            const livroExiste = await livroModel.buscarPorId(id)
-            if (!livroExiste) {
-                return res.status(404).json({ erro: 'Livro não encontrado' })
-            }
- 
-            const livroAtualizado = await livroModel.atualizar(id, titulo, autor, isbn)
+            const livroAtualizado = await livroService.atualizar(id, titulo, autor, isbn)
             res.json(livroAtualizado)
         } catch (error) {
             console.error('Erro ao atualizar livro:', error)
-            res.status(500).json({ erro: 'Erro interno ao atualizar livro' })
+            res.status(error.status || 500).json({ erro: error.message })
         }
     },
- 
-    deletarLivro: async (req, res) => {
+
+    deletar: async (req, res) => {
         try {
             const { id } = req.params
- 
-            const livroExiste = await livroModel.buscarPorId(id)
-            if (!livroExiste) {
-                return res.status(404).json({ erro: 'Livro não encontrado' })
-            }
- 
-            await livroModel.deletar(id)
+            await livroService.deletar(id)
             res.status(204).send()
         } catch (error) {
             console.error('Erro ao deletar livro:', error)
-            res.status(500).json({ erro: 'Erro interno ao deletar livro' })
+            res.status(error.status || 500).json({ erro: error.message })
         }
     }
 }
- 
+
 module.exports = livroController
