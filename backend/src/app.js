@@ -1,6 +1,9 @@
 // src/app.js
 const express = require('express')
 const app = express()
+
+const cors = require('cors')
+
 require('dotenv').config()
 
 // rotas
@@ -9,6 +12,9 @@ const usuarioRoutes = require('./routes/usuarioRoutes')
 const emprestimoRoutes = require('./routes/emprestimoRoutes')
 
 app.use(express.json()) // lê o body das requisições como JSON
+app.use(cors({
+  origin: 'http://localhost:5173' // só aceita o front local
+}))
 
 app.use(livrosRoutes)
 app.use(usuarioRoutes)
