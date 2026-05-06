@@ -6,11 +6,8 @@ const livroModel = {
         return resultado.rows
     },
 
-    buscarPorId: async (id) => {
-        const resultado = await pool.query(
-            'SELECT * FROM livros WHERE id = $1',
-            [id]
-        )
+    buscarPorId: async (id, client = pool) => {
+        const resultado = await client.query('SELECT * FROM livros WHERE id = $1', [id])
         return resultado.rows[0]
     },
 
@@ -47,15 +44,15 @@ const livroModel = {
         await pool.query('DELETE FROM livros WHERE id = $1', [id])
     },
 
-    decrementarDisponivel: async (id) => {
-        await pool.query(
+    decrementarDisponivel: async (id, client = pool) => {
+        await client.query(
             'UPDATE livros SET quantidade_disponivel = quantidade_disponivel - 1 WHERE id = $1',
             [id]
         )
     },
 
-    incrementarDisponivel: async (id) => {
-        await pool.query(
+    incrementarDisponivel: async (id, client = pool) => {
+        await client.query(
             'UPDATE livros SET quantidade_disponivel = quantidade_disponivel + 1 WHERE id = $1',
             [id]
         )

@@ -7,13 +7,17 @@ const usuarioModel = {
         const resultado = await pool.query('SELECT * FROM usuarios')
         return resultado.rows //Retorna todos os usuarios
     },
+    buscarPorId: async (id) => {
+        const resultado = await pool.query('SELECT * FROM usuarios where id = $1', [id])
+        return resultado.rows[0] //Retorna todos os usuarios
+    },
     criar: async (nome, email, senha_hash, role) => {
         const resultado = await pool.query(
             `INSERT INTO usuarios (nome, email, senha_hash, role)
             VALUES ($1, $2, $3, $4)
             RETURNING *`,
             [nome, email, senha_hash, role]
-        )
+        ) 
         return resultado.rows[0] //Insere e retorna o usuario criado
     },
     deletar: async (id) => {
